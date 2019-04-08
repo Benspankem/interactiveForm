@@ -150,7 +150,15 @@ $('#payment').change(function(){
 
 // F O R M  V A L I D A T I O N //
 $('button:submit').on('click', function(e){
-    
+    // Stop repeating messages
+    $('p.nameAlert').remove();
+    $('p.emailAlert').remove();
+    $('p.tshirtAlert').remove();
+    $('p.activityAlert').remove();
+    $('p.ccAlert').remove();
+    $('p.zipCodeAlert').remove();
+    $('p.cvvAlert').remove();
+	
     // Local variable for this function //
     var name = $('#name');
     var email = $('#mail');
