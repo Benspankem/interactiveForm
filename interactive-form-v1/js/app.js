@@ -3,12 +3,11 @@
 $('document').ready(function(){ 
     // Focus on first input 
     $('#name').focus(); 
-    $('fieldset').append('<input type="text" id="other-title" name="other_title" placeholder="Your Job Role">');
     // Hidden elements till it's selected
     $('#other-title').hide(); 
     $('#colors-js-puns').hide();
 }) 
- 
+
 //     J O B      R O L E      //
 // Event handler to show input if option is selected
 $('#title').change(function(){
@@ -38,7 +37,7 @@ $('#design').change(function(){
 
 // R E G I S T E R   4   A C T I V I T I E S   //
 
-// variables for activities
+// Variables for activities
 var jsFrameworks = $("input[name='js-frameworks']");
 var express = $("input[name='express']");
 var jsLibraries = $("input[name='js-libs']");
@@ -131,7 +130,7 @@ $("input[name='npm']").change(function () {
 
 // Set credit card as default
 $('#payment').val('credit card');
-//hide paypal and bitcoin by default
+// Hide paypal and bitcoin by default
 $('#paypal, #bitcoin').hide();
 // Disable sethod method from the options
 $('option[value="select_method"]').prop("disabled", true);
@@ -151,92 +150,94 @@ $('#payment').change(function(){
 
 // F O R M  V A L I D A T I O N //
 $('button:submit').on('click', function(e){
-    var isValid = true;
+    
+    // Local variable for this function //
+    var name = $('#name');
+    var email = $('#mail');
+    var cc = $('#cc-num');
+    var zip = $('#zip');
+    var cvv = $('#cvv');
 
-// Check is name or email is empty //
-    var nameCheck = $('#name');
-    var emailCheck = $('#mail');
-    var nameAlertPlaceholder = nameCheck.attr('placeholder', 'Please write your name');
-    var emailAlertPlaceholder = emailCheck.attr('placeholder', 'Please write your email');
-    // If name or email is empty, border will turn red //
-    if ( nameCheck.val().length == 0 ){
-        nameCheck.css('borderColor', 'red');
+    // Check name input
+    if (name.val() === "") {
+        name.attr('placeholder', 'Please write your name');
+        $('.basic').append('<p class="nameAlert">Please write your name</p>');
+        name.css('borderColor', 'red');
         isValid = false;
     } 
-    if ( emailCheck.val().length == 0  ) {
-        emailCheck.css('borderColor', 'red');
-        isValid = false;
-    }
-    // Turn color back to normal when you are typing in the name or email input 
-    nameCheck.on('keyup', function(){
-        if (nameCheck.val().length != 0) {
-            nameCheck.css('borderColor', '#5e97b0');
-        } 
-    });
-    emailCheck.on('keyup', function(){
-        if (emailCheck.val().length != 0) {
-            emailCheck.css('borderColor', '#5e97b0');
-        }    
-    });
+
+    name.on('change keyup', function(){
+        if(name.val().length) {
+            name.css('borderColor', '#5e97b0');
+            $('.nameAlert').remove();
+            isValid = true;
+        }
+    })
 
 // Check email input
+    if (email.val() === "") {
+        email.attr('placeholder', 'Please write valid email address');
+        email.css('borderColor', 'red');
+        isValid = false;
+    };
+
     var mailFormat = /^[^@]+@[^@.]+\.[a-z]+$/i;
-    var userEmail = $('#mail').val();
-    var mailChecker = mailFormat.test(userEmail);
-    
-    if( !mailChecker ) {
-            $('#mail').append('<p class="email_checker">Please write valid email address</p>');
+    if( !mailFormat.test($(email).val()) ) {
+            email.css('borderColor', 'red');   
+            $('.basic').append('<p class="emailAlert">Please write valid email address</p>');
+            isValid = false;
         } else {
-            $('#mail').remove('<p class="email_checker">Please write valid email address</p>')
+            $('.emailAlert').remove();
         }
 
+    email.on('change keyup', function(){
+        if (email.val().length ) {
+            email.css('borderColor', '#5e97b0');
+            $('.email_checker').remove();
+        } else {
+            email.css('borderColor', 'red');
+            isValid = false;
+        }
+});
 
     // Check t-shirt info selection
-    if( $('#design option:first').is(':selected') ) {
-        $('.shirt').append('<p class="tshirt_checker">Please select a design</p>');
+    if ( $('#design option:first').is(':selected') ) {
+        $('.shirt').append('<p class="tshirtAlert">Please select a design</p>');
         isValid = false;
     }
+
     $('#design').on('change', function() {
         if( !$('#design option:first').is(':selected') ) {
-            $('.tshirt_checker').remove();
+            $('.tshirtAlert').remove();
         } else {
-            $('.shirt').append('<p class="tshirt_checker">Please select design</p>');
+            $('.shirt').append('<p class="tshirtAlert">Please select design</p>');
             isValid = false;
         }
     });
 
     // Check activiites checkbox
-    if( !$('.activities input:checked').length ) {
-        if( !$('.activity_error').length ) {
-            $('.activities').append('<p class="activity_error">At least one must be selected</p>')
-        }
-
-        $('.activities input').on('change', function(){
-            $('.activity_error').remove();
-        });
+    if( $('.activities input:checked').length === 0) {
+        $('.activities').append('<p class="activityAlert">At least one must be selected</p>');
         isValid = false;
-    }
+        } else {
+            $('.activityAlert').remove();
+        }
 
     // Check credit card user input
     if( $('option[value="credit card"]').is(':selected') ) {
         var cCChecker = /^(\d{13,16})$/;
-        if( !cCChecker.test( $('#cc-num').val()) ) {
-            $('#cc-num').css('borderColor', 'red');
+        if( !cCChecker.test(cc.val())) {
+            $('#credit-card').append('<p class="ccAlert">Please enter 13-16 digits of your credit card</p>');
+            cc.css('borderColor', 'red');
 
             //Check while user is typing
-            $('#cc-num').on('change keyup', function(){
+            cc.on('change keyup', function(){
                 //Check credit card length
-                if( $('#cc-num').val().length ) {
-                    $('#cc-num').css('borderColor', '#5e97b0')
+                if(cc.val().length ) {
+                    cc.css('borderColor', '#5e97b0')
+                    $('.ccAlert').remove();
                 } else {
-                    $('#cc-num').css('borderColor', 'red')
-                }
-                if( !cCChecker.test( $('#cc-num').val()) ){
-                    if( !$('.creditcard_checker').length ) {
-                        $('#cc-num').append('<p class="creditcard_checker">Between 13 and 16 digits</p>');
-                    }
-                } else {
-                    $('.creditcard_checker').remove();
+                    cc.css('borderColor', 'red')
                 }
             });
             isValid = false;
@@ -245,22 +246,17 @@ $('button:submit').on('click', function(e){
         // Check zip code user input
         var zipCodeChecker = /^(\d{5})$/;
         if( !zipCodeChecker.test( $('#zip').val()) ) {
-            $('#zip').css('borderColor', 'red');
+            zip.css('borderColor', 'red');
+            $('#credit-card').append('<p class="zipCodeAlert"> Enter 5 digits Zip Code</p>');
 
             //Check while user is typing
-            $('#zip').on('change keyup', function(){
+            zip.on('change keyup', function(){
                 //Check zip code length
-                if( $('#zip').val().length ) {
-                    $('#zip').css('borderColor', '#5e97b0');
+                if( zip.val().length ) {
+                    zip.css('borderColor', '#5e97b0');
+                    $('.zipCodeAlert').remove();
                 } else {
-                    $('#zip').css('borderColor', 'red')
-                }
-                if( !zipCodeChecker.test( $('#zip').val()) ) {
-                    if( !$('.zipcode_checker').length ) {
-                        $('#zip').append('<p class="zipcode_checker">Max 5 digits</p>');
-                    } 
-                } else {
-                    $('.zipcode_checker').remove();
+                    zip.css('borderColor', 'red')
                 }
             });
             isValid = false;
@@ -269,31 +265,32 @@ $('button:submit').on('click', function(e){
         //Check cvv user input
         var cvvChecker = /^(\d{3})$/;
         if( !cvvChecker.test( $('#cvv').val()) ) {
-            $('#cvv').css('borderColor', 'red');
-
+            cvv.css('borderColor', 'red');
+            $('#credit-card').append('<p class="cvvAlert">Enter 3 digits of your security code</p>');
             //Check while user is typing
-            $('#cvv').on('change keyup', function(){
+            cvv.on('change keyup', function() {
                 //Check cvv length
-                if( $('#cvv').val().length ) {
-                    $('#cvv').css('borderColor', '#5e97b0')
+                if( cvv.val().length ) {
+                    cvv.css('borderColor', '#5e97b0')
+                    $('.cvvAlert').remove();
                 } else {
-                    $('#cvv').css('borderColor', 'red')
-                }
-                if( !cvvChecker.test( $('#cvv').val()) ) {
-                    $('#cvv').append('<p class="cvv_checker">Max 3 digits</p>');
-                } else {
-                    $('.cvv_checker').remove();
+                    cvv.css('borderColor', 'red')
                 }
             });
             isValid = false;
-        }
     }
-    
+}
+	
     //Stop process if form is invalid
     if( !isValid ) {
         e.preventDefault();
     }
 });
+
+
+
+
+
 
 
 
