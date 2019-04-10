@@ -165,7 +165,10 @@ $('button:submit').on('click', function(e){
     var cc = $('#cc-num');
     var zip = $('#zip');
     var cvv = $('#cvv');
-
+	
+    // Assuming everything is correct from the beginning of the function
+    isValid = true;
+	
     // Check name input
     if (name.val() === "") {
         name.attr('placeholder', 'Please write your name');
@@ -178,7 +181,6 @@ $('button:submit').on('click', function(e){
         if(name.val().length) {
             name.css('borderColor', '#5e97b0');
             $('.nameAlert').remove();
-            isValid = true;
         }
     })
 
@@ -292,6 +294,10 @@ $('button:submit').on('click', function(e){
     //Stop process if form is invalid
     if( !isValid ) {
         e.preventDefault();
+    }
+    // if everything is correct, this alert message should appear
+    if (isValid) {
+        alert("Thank you for your purchase. I hope to see you soon!");
     }
 });
 
